@@ -88,11 +88,33 @@ while(gameRunning === true){
             currentLocation = "village";  // Return to village after battle
             console.log("\nYou return to the safety of the village.");
         }
+    let validChoice = false;
+    
+    //let choiceNum = parseInt(choice);
 
-    let choice = Readline.question("\n Enter choice (number): ");
-    let choiceNum = parseInt(choice);
+    while(!validChoice){
+
+        try {
+                let choice = Readline.question("\n Enter choice (number): ");
+                // Check for empty input
+                if(choice.trim() === ""){
+                    throw "Please enter a number!";
+                }
+                let choiceNum = parseInt(choice);
+
+                //Check if NaN
+                if(isNaN(choiceNum)){
+                    throw "Please enter a number!";
+                }
 
     if (currentLocation === "village"){
+
+            //Check valid range of input
+            if(choiceNum < 1 || choiceNum > 6){
+                throw "Please enter number in a range 1 to 6."
+            }
+                validChoice = true; 
+
         if (choiceNum === 1){
             currentLocation = "blacksmith"
             console.log("\nYou enter the blacksmith's shop.");
@@ -129,6 +151,13 @@ while(gameRunning === true){
         }
 
     }else if(currentLocation === "blacksmith"||currentLocation ==="market"){
+
+            if(choiceNum < 1 || choiceNum >6){
+                throw "Please enter a number between 1 and 4."
+            }
+
+            validChoice = true;
+
         if(choiceNum === 1){
             currentLocation = "village";
             console.log("\nYou return to the village center.");
@@ -163,6 +192,11 @@ while(gameRunning === true){
         console.log("\nGame Over! Your health reached 0!");
         gameRunning = false;
     }
+}catch(error){
+    console.log("\n Error: " + error);
+    console.log("Please try again!");
+}
+}
 }
 
 console.log("\nGame has ended.");
