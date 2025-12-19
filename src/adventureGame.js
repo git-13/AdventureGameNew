@@ -13,6 +13,11 @@ let inventory = [];
 let weaponDamage = 0;
 let monsterDefense = 5;
 let healingPotionValue = 30;
+let firstVisit = true;
+let hasWeapon = false;
+let hasPotion = false;
+let hasArmor = false;
+
 
 function showStatus(){
             console.log("\n===" + playerName + "'s Status: ===");
@@ -104,6 +109,47 @@ function move(choiceNum) {
     return validMove;
 }
 
+function handleCombat() {
+   if (hasWeapon) {
+       console.log("You have a sword! You attack!");
+       console.log("Victory! You found 10 gold!");
+       playerGold += 10;
+       return true;
+   } else {
+       console.log("Without a weapon, you must retreat!");
+       updateHealth(-20);
+       return false;
+   }
+}
+
+function updateHealth(amount) {
+   playerHealth += amount;
+   
+   if (playerHealth > 100) {
+       playerHealth = 100;
+       console.log("You're at full health!");
+   }
+   if (playerHealth < 0) {
+       playerHealth = 0;
+       console.log("You're gravely wounded!");
+   }
+   
+   console.log("Health is now: " + playerHealth);
+   return playerHealth;
+}
+
+function checkInventory() {
+   console.log("\n=== INVENTORY ===");
+   if (!hasWeapon && !hasPotion && !hasArmor) {
+       console.log("Your inventory is empty!");
+       return;
+   }
+   
+   if (hasWeapon) console.log("- Sword");
+   if (hasPotion) console.log("- Health Potion");
+   if (hasArmor) console.log("- Shield");
+}
+
 console.log("=============================");
 console.log("      The Dragons Quest      ")
 console.log("=============================");
@@ -118,10 +164,7 @@ console.log("Monsters can withstand some damage in combat!");
 console.log("Healing potion value: " + healingPotionValue);
 console.log("A potion will restore 30 health!");
 
-let firstVisit = true;
-let hasWeapon = false;
-let hasPotion = false;
-let hasArmor = false;
+
 
 //Main game loop
 while (gameRunning) {
@@ -157,7 +200,12 @@ while (gameRunning) {
                 if (choiceNum <= 3) {
                     if (!move(choiceNum)) {
                         console.log("\nYou can't go there!");
-                    }
+                    }else if (choiceNum === 3) {
+                       console.log("\nA monster appears!");
+                       if (!handleCombat()) {
+                           currentLocation = "village";
+                       }
+                   }
                 }
                 else if (choiceNum === 4) {
                     showStatus();
